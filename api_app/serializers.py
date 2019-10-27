@@ -19,7 +19,7 @@ class ProjectGroupSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ProjectGroup
+        model = Project
         fields = ['group', 'name', 'description']
 
 class RegisterSerializer(RegisterSerializer):
