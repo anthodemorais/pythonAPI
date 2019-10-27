@@ -36,10 +36,13 @@ class ProjectViewset(viewsets.ModelViewSet):
         if self.request.user.is_superuser:
             return Project.objects.all()
         else:
-            return Project.objects.filter(user=self.request.user)
+            student = Student.objects.filter(user=self.request.user)
+            groups = ProjectGroup.objects.filter(users__in=student)
+            projects = Project.objects.filter(group__in=groups)
+            return projects
     def get_permissions(self):
         if self.action == 'destroy':
-            permission_classes = [IsAdmin]
+            permission_classes = [IsAdminUser]
         else:
             permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
@@ -51,7 +54,8 @@ class ProjectGroupViewset(viewsets.ModelViewSet):
         if self.request.user.is_superuser:
             return ProjectGroup.objects.all()
         else:
-            return ProjectGroup.objects.filter(user=self.request.user)
+            student = Student.objects.filter(user=self.request.user)
+            return ProjectGroup.objects.filter(users__in=student)
     def get_permissions(self):
         if self.action == 'destroy':
             permission_classes = [IsAdmin]
