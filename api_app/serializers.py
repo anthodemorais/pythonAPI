@@ -1,6 +1,6 @@
 from .models import Student, Teacher, ProjectGroup, Project
 from rest_framework import serializers
-
+from rest_auth.registration.serializers import RegisterSerializer
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,9 +15,22 @@ class TeacherSerializer(serializers.ModelSerializer):
 class ProjectGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectGroup
-        fields = ['usernames']
+        fields = ['users']
 
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectGroup
         fields = ['group', 'name', 'description']
+
+class RegisterSerializer(RegisterSerializer):
+    def save(self, request):
+        user = super().save(request)
+        if "teacher" in request.data:
+            teacher = Teacher(user=user)
+            teacher.save()
+            print("c")
+        else:
+            student = Student(user=user)
+            student.save()
+            print("d")
+        return user
