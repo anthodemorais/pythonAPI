@@ -1,14 +1,23 @@
-from django.contrib.auth.models import User, Group
+from .models import Student, Teacher, ProjectGroup, Project
 from rest_framework import serializers
 
-# Create your models here.
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = ['url', 'username', 'email', 'groups']
 
-
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
+class StudentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Group
-        fields = ['url', 'name']
+        model = Student
+        fields = ['user']
+
+class TeacherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Teacher
+        fields = ['user']
+
+class ProjectGroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectGroup
+        fields = ['usernames']
+
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectGroup
+        fields = ['group', 'name', 'description']

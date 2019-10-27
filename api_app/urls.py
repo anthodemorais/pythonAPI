@@ -1,19 +1,16 @@
-from django.contrib.auth.models import User, Group
-from rest_framework import viewsets
-from api_app.serializers import UserSerializer, GroupSerializer
+from rest_framework import routers
+from django.urls import include, path
+from . import views
 
+router = routers.DefaultRouter()
+router.register(r'students', views.StudentViewset)
+router.register(r'teachers', views.TeacherViewset)
+router.register(r'groups', views.ProjectGroupViewset)
+router.register(r'projects', views.ProjectViewset)
 
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
-
-
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
+urlpatterns = [
+    #path('users/', views.UserListView.as_view()),
+    path('auth/registration/', include('rest_auth.registration.urls')),
+    path('auth/', include('rest_auth.urls')),
+    path('', include(router.urls)),
+]
